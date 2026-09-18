@@ -225,7 +225,7 @@
 <script>
   /* Ganti URL di bawah ini dengan URL deployment Apps Script Anda
      (diakhiri /exec), sesuai kode.gs yang sudah dipasang di Sheet. */
-  var SCRIPT_URL = 'PASTE_URL_WEB_APP_DISINI';
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzh5YceskfR7WGgjbg6lSOmFogI0-XGAAp9o4-JcX0QHJGZe9z2ovtCw-lP-4v_Uyh0LQ/exec';
 
   function openOverlay(id){ document.getElementById(id).classList.add('show'); }
   function closeOverlay(id){ document.getElementById(id).classList.remove('show'); }
@@ -257,7 +257,7 @@
   document.getElementById('absenForm').addEventListener('submit', function(e){
     e.preventDefault();
 
-    if(SCRIPT_URL.indexOf('PASTE_URL_WEB_APP_DISINI') !== -1){
+    if(!SCRIPT_URL || SCRIPT_URL.indexOf('script.google.com') === -1){
       document.getElementById('errorText').textContent = 'URL backend belum diatur. Tempel URL deployment Apps Script pada variabel SCRIPT_URL di kode halaman ini.';
       openOverlay('overlayError');
       return;
