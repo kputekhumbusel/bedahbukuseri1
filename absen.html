@@ -169,7 +169,7 @@
   <div class="panel">
     <span class="kicker">Formulir presensi</span>
     <h2>Isi Daftar Hadir Kegiatan</h2>
-    <p class="desc">Sosialisasi Tahapan Pemilihan Serentak kepada Pemilih Pesisir dan Kepulauan. Presensi hanya dapat diisi oleh peserta yang sudah terdaftar.</p>
+    <p class="desc">Sosialisasi Tahapan Pemilihan Serentak kepada Pemilih Pesisir dan Kepulauan. Satu alamat email hanya dapat mengisi presensi satu kali.</p>
 
     <form id="absenForm" novalidate>
       <label for="email">Email</label>
@@ -198,7 +198,7 @@
 <div class="overlay" id="overlayReject">
   <div class="modal reject">
     <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
-    <h3 id="rejectTitle">Email sudah terdaftar</h3>
+    <h3 id="rejectTitle">Sudah mengisi presensi</h3>
     <p id="rejectText">Alamat email ini sudah pernah mengisi daftar hadir untuk kegiatan ini.</p>
     <button onclick="closeOverlay('overlayReject')">Mengerti</button>
   </div>
@@ -289,13 +289,6 @@
     .then(function(res){ return res.json(); })
     .then(function(result){
       setLoading(false);
-
-      if(result.status === 'not_registered'){
-        document.getElementById('rejectTitle').textContent = 'Email belum terdaftar';
-        document.getElementById('rejectText').textContent = result.message || ('Email "' + email + '" belum terdaftar sebagai peserta kegiatan ini. Hubungi panitia jika Anda merasa ini keliru.');
-        openOverlay('overlayReject');
-        return;
-      }
 
       if(result.status === 'duplicate'){
         document.getElementById('rejectTitle').textContent = 'Sudah mengisi presensi';
