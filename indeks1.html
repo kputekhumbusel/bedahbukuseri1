@@ -134,11 +134,11 @@
 
   <div class="hero">
     <span class="kicker">Undangan kegiatan</span>
-    <h2>Bedah Buku Seri 1 "Tata kelola Pemilu Di Indonesia (Pemungutan dan Penghitungan Suara)"</h2>
+    <h2>Sosialisasi Tahapan Pemilihan Serentak kepada Pemilih Pesisir dan Kepulauan</h2>
     <div class="stat-row">
       <div class="stat">
         <div class="dot" style="background:var(--amber)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/></svg></div>
-        <div><div class="val">21 Sep 2026</div><div class="lbl">Tanggal pelaksanaan</div></div>
+        <div><div class="val">17 Sep 2026</div><div class="lbl">Tanggal pelaksanaan</div></div>
       </div>
       <div class="stat">
         <div class="dot" style="background:var(--pink-600)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.4"/></svg></div>
@@ -146,7 +146,7 @@
       </div>
       <div class="stat">
         <div class="dot" style="background:var(--amber)"><svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H7a4 4 0 0 0-4 4v2"/><circle cx="10" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
-        <div><div class="val">318 peserta</div><div class="lbl">Telah mengisi presensi</div></div>
+        <div><div class="val" id="pesertaCount">–</div><div class="lbl">Telah mengisi presensi</div></div>
       </div>
     </div>
   </div>
@@ -192,6 +192,25 @@
   </footer>
 
 </div>
+
+<script>
+  /* Isi dengan URL Web App Apps Script yang sama seperti di absen.html
+     (diakhiri /exec) supaya jumlah peserta terisi otomatis. */
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4Z3O2fObU3PGGKP4oGCcidzFjaq3lOrYDwNTYxhwfxUHOQz0O2jpXPeJ2DMJhNciD/exec';
+
+  (function(){
+    if(!SCRIPT_URL || SCRIPT_URL.indexOf('script.google.com') === -1) return;
+
+    fetch(SCRIPT_URL + '?action=count')
+      .then(function(res){ return res.json(); })
+      .then(function(result){
+        if(result && typeof result.count === 'number'){
+          document.getElementById('pesertaCount').textContent = result.count + ' peserta';
+        }
+      })
+      .catch(function(){ /* biarkan tampil "–" jika gagal memuat */ });
+  })();
+</script>
 
 </body>
 </html>
