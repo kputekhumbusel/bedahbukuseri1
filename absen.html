@@ -169,7 +169,7 @@
   <div class="panel">
     <span class="kicker">Formulir presensi</span>
     <h2>Isi Daftar Hadir Kegiatan</h2>
-    <p class="desc">Bedah Buku Seri 1 "Tata Kelola Pemilu Di Indonesia (Pemungutan dan Penghitungan Suara)".</p>
+    <p class="desc">Sosialisasi Tahapan Pemilihan Serentak kepada Pemilih Pesisir dan Kepulauan. Presensi hanya dapat diisi oleh peserta yang sudah terdaftar.</p>
 
     <form id="absenForm" novalidate>
       <label for="email">Email</label>
@@ -198,8 +198,8 @@
 <div class="overlay" id="overlayReject">
   <div class="modal reject">
     <div class="icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.2"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg></div>
-    <h3>Email sudah terdaftar</h3>
-    <p id="rejectText">Alamat email ini sudah pernah mengisi daftar hadir untuk kegiatan ini. Setiap peserta hanya dapat mengisi presensi satu kali.</p>
+    <h3 id="rejectTitle">Email sudah terdaftar</h3>
+    <p id="rejectText">Alamat email ini sudah pernah mengisi daftar hadir untuk kegiatan ini.</p>
     <button onclick="closeOverlay('overlayReject')">Mengerti</button>
   </div>
 </div>
@@ -225,7 +225,7 @@
 <script>
   /* Ganti URL di bawah ini dengan URL deployment Apps Script Anda
      (diakhiri /exec), sesuai kode.gs yang sudah dipasang di Sheet. */
-  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbws6PHf_vFwN_2ZXITKDdMhetYnWh9rei-r4Od7qZN_3grTgVoJpO_j8lb1M7frOkhQIw/exec';
+  var SCRIPT_URL = 'PASTE_URL_WEB_APP_DISINI';
 
   function openOverlay(id){ document.getElementById(id).classList.add('show'); }
   function closeOverlay(id){ document.getElementById(id).classList.remove('show'); }
@@ -257,7 +257,7 @@
   document.getElementById('absenForm').addEventListener('submit', function(e){
     e.preventDefault();
 
-    if(SCRIPT_URL.indexOf('https://script.google.com/macros/s/AKfycbws6PHf_vFwN_2ZXITKDdMhetYnWh9rei-r4Od7qZN_3grTgVoJpO_j8lb1M7frOkhQIw/exec') !== -1){
+    if(SCRIPT_URL.indexOf('PASTE_URL_WEB_APP_DISINI') !== -1){
       document.getElementById('errorText').textContent = 'URL backend belum diatur. Tempel URL deployment Apps Script pada variabel SCRIPT_URL di kode halaman ini.';
       openOverlay('overlayError');
       return;
@@ -290,7 +290,15 @@
     .then(function(result){
       setLoading(false);
 
+      if(result.status === 'not_registered'){
+        document.getElementById('rejectTitle').textContent = 'Email belum terdaftar';
+        document.getElementById('rejectText').textContent = result.message || ('Email "' + email + '" belum terdaftar sebagai peserta kegiatan ini. Hubungi panitia jika Anda merasa ini keliru.');
+        openOverlay('overlayReject');
+        return;
+      }
+
       if(result.status === 'duplicate'){
+        document.getElementById('rejectTitle').textContent = 'Sudah mengisi presensi';
         document.getElementById('rejectText').textContent = result.message || ('Email "' + email + '" sudah pernah mengisi daftar hadir untuk kegiatan ini.');
         openOverlay('overlayReject');
         return;
