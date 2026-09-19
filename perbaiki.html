@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Perbaiki Data Sertifikat — KPU Kabupaten Buton Selatan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red-600:#d92626;
+    --red-700:#b31e1e;
+    --red-100:#fbe6e2;
+    --amber:#c99a3d;
+    --bg:#f7f4ec;
+    --panel:#ffffff;
+    --ink:#2b241d;
+    --ink-soft:#8a7f6d;
+    --line:#ece4d4;
+    --danger:#c0392b;
+  }
+  [data-theme="dark"]{
+    --bg:#1a1410; --panel:#241c16; --ink:#f2ece1; --ink-soft:#b3a390; --line:#382c22; --red-100:#3a1a14;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1a1410; --panel:#241c16; --ink:#f2ece1; --ink-soft:#b3a390; --line:#382c22; --red-100:#3a1a14;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family:'Poppins', -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+
+  header{
+    background: var(--red-600);
+    color:#fff;
+    padding: 20px 28px;
+  }
+  .header-inner{
+    max-width: 560px; margin:0 auto;
+    display:flex; align-items:center; gap:14px;
+  }
+  .mark{
+    width:42px; height:42px; border-radius:12px; flex-shrink:0;
+    background:#fff;
+    display:flex; align-items:center; justify-content:center;
+    padding:6px;
+  }
+  .mark img{ width:100%; height:100%; object-fit:contain; }
+  .header-inner h1{ font-size:17px; font-weight:600; margin:0; color:#fff; }
+  .header-inner .org{ font-size:12px; color:#ffdcdc; margin:2px 0 0; }
+
+  .wrap{ max-width:560px; margin:0 auto; padding: 28px 20px 60px; }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 26px 24px 28px;
+  }
+  .panel .kicker{
+    display:inline-block;
+    background: var(--red-100); color: var(--red-700);
+    font-size:11.5px; font-weight:600; letter-spacing:.03em;
+    padding: 5px 12px; border-radius: 999px; margin-bottom: 12px;
+  }
+  .panel h2{ font-size:19px; font-weight:600; margin:0 0 6px; }
+  .panel .desc{ font-size:13px; color: var(--ink-soft); margin:0 0 22px; line-height:1.5; }
+
+  label{ display:block; font-size:13px; font-weight:500; margin: 16px 0 6px; }
+  label:first-of-type{ margin-top:0; }
+  input{
+    width:100%;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    border-radius: 10px;
+    padding: 11px 13px;
+    font-size: 14px;
+    font-family: inherit;
+    outline:none;
+    transition: border-color .15s ease;
+  }
+  input:focus{ border-color: var(--red-600); }
+  input:disabled{ opacity:.65; }
+  input.invalid{ border-color: var(--danger); }
+  .err{ font-size:12px; color: var(--danger); margin-top:5px; display:none; }
+  .err.show{ display:block; }
+
+  .search-row{ display:flex; gap:10px; }
+  .search-row input{ flex:1; }
+  button.find-btn{
+    flex-shrink:0;
+    background: var(--red-600); color:#fff; border:none;
+    border-radius: 10px; padding: 0 18px;
+    font-family: inherit; font-size: 14px; font-weight:600; cursor:pointer;
+  }
+  button.find-btn:hover{ background: var(--red-700); }
+  button.find-btn:disabled{ opacity:.6; cursor:default; }
+
+  .edit-block{ display:none; margin-top: 6px; }
+  .edit-block.show{ display:block; }
+
+  button.save-btn{
+    margin-top: 20px;
+    width:100%;
+    background: var(--amber);
+    color:#fff;
+    border:none;
+    border-radius: 10px;
+    padding: 13px;
+    font-family: inherit;
+    font-size: 14.5px;
+    font-weight:600;
+    cursor:pointer;
+  }
+  button.save-btn:hover{ filter:brightness(0.94); }
+  button.save-btn:disabled{ opacity:.6; cursor:default; }
+
+  .status-msg{
+    margin-top: 16px;
+    display:none; gap:10px;
+    padding: 13px 14px; border-radius: 12px;
+    font-size: 12.5px; line-height:1.55;
+  }
+  .status-msg.show{ display:flex; }
+  .status-msg.error{ background: var(--red-100); color: var(--red-700); }
+  .status-msg.ok{ background:#e6f5ee; color:#1a7a4c; }
+  [data-theme="dark"] .status-msg.ok{ background:#123527; color:#5fd6a0; }
+  @media (prefers-color-scheme: dark){ :root:not([data-theme="light"]) .status-msg.ok{ background:#123527; color:#5fd6a0; } }
+
+  footer{
+    max-width:560px; margin:24px auto 0; padding: 0 20px;
+    font-size:12px; color: var(--ink-soft);
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="mark"><img src="https://www.kpu.go.id/images/1627539868logo-kpu.png" alt="Logo KPU"></div>
+    <div>
+      <h1>Perbaiki Data</h1>
+      <p class="org">KPU Kabupaten Buton Selatan</p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <span class="kicker">Perbaikan data</span>
+    <h2>Perbaiki Data Sertifikat</h2>
+    <p class="desc">Salah tulis nama, nomor HP, atau instansi saat mengisi daftar hadir? Cari data Anda dengan email, lalu perbaiki di sini.</p>
+
+    <label for="email">Email</label>
+    <div class="search-row">
+      <input type="email" id="email" placeholder="nama@email.com" autocomplete="email">
+      <button class="find-btn" id="findBtn">Cari Data</button>
+    </div>
+    <div class="err" id="err-email"></div>
+
+    <div class="status-msg error" id="statusError">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <span id="statusErrorText"></span>
+    </div>
+    <div class="status-msg ok" id="statusOk">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0"><path d="M20 6L9 17l-5-5"/></svg>
+      <span>Data berhasil diperbarui. Sertifikat akan ikut memakai data terbaru.</span>
+    </div>
+
+    <div class="edit-block" id="editBlock">
+      <label for="nama">Nama Lengkap</label>
+      <input type="text" id="nama" placeholder="Nama sesuai identitas">
+
+      <label for="hp">Nomor HP</label>
+      <input type="tel" id="hp" placeholder="08xxxxxxxxxx">
+
+      <label for="instansi">Instansi Asal / Organisasi</label>
+      <input type="text" id="instansi" placeholder="Nama instansi atau organisasi">
+
+      <button class="save-btn" id="saveBtn">Simpan Perubahan</button>
+    </div>
+  </div>
+
+  <footer>Komisi Pemilihan Umum Kabupaten Buton Selatan</footer>
+</div>
+
+<script>
+  /* Isi dengan URL Web App Apps Script yang sama seperti di absen.html */
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby-Sajki_BzHqrGXTUUcS5haiiJgP4S8LE4RMRfp-cuWFg7T3FOdOljIgSrFrat5qsBLw/exec';
+
+  var emailInput = document.getElementById('email');
+  var findBtn = document.getElementById('findBtn');
+  var editBlock = document.getElementById('editBlock');
+  var saveBtn = document.getElementById('saveBtn');
+  var foundEmail = '';
+
+  function setError(msg){
+    var err = document.getElementById('err-email');
+    if(msg){ emailInput.classList.add('invalid'); err.textContent = msg; err.classList.add('show'); }
+    else{ emailInput.classList.remove('invalid'); err.textContent=''; err.classList.remove('show'); }
+  }
+  function showStatusError(msg){
+    document.getElementById('statusErrorText').textContent = msg;
+    document.getElementById('statusError').classList.add('show');
+    document.getElementById('statusOk').classList.remove('show');
+  }
+  function hideStatus(){
+    document.getElementById('statusError').classList.remove('show');
+    document.getElementById('statusOk').classList.remove('show');
+  }
+
+  emailInput.addEventListener('input', function(){
+    setError('');
+    hideStatus();
+    editBlock.classList.remove('show');
+  });
+
+  function findData(){
+    var email = emailInput.value.trim();
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    setError('');
+    hideStatus();
+    editBlock.classList.remove('show');
+
+    if(!email || !emailPattern.test(email)){
+      setError('Masukkan alamat email yang valid.');
+      return;
+    }
+    if(!SCRIPT_URL || SCRIPT_URL.indexOf('script.google.com') === -1){
+      showStatusError('URL backend belum diatur. Tempel URL deployment Apps Script pada variabel SCRIPT_URL di kode halaman ini.');
+      return;
+    }
+
+    findBtn.disabled = true;
+    findBtn.textContent = 'Mencari...';
+
+    fetch(SCRIPT_URL + '?action=getRecord&email=' + encodeURIComponent(email))
+      .then(function(res){ return res.json(); })
+      .then(function(result){
+        findBtn.disabled = false;
+        findBtn.textContent = 'Cari Data';
+
+        if(result.status !== 'found'){
+          showStatusError(result.message || 'Email belum tercatat mengisi daftar hadir.');
+          return;
+        }
+
+        foundEmail = result.email;
+        document.getElementById('nama').value = result.nama || '';
+        document.getElementById('hp').value = result.hp || '';
+        document.getElementById('instansi').value = result.instansi || '';
+        editBlock.classList.add('show');
+      })
+      .catch(function(){
+        findBtn.disabled = false;
+        findBtn.textContent = 'Cari Data';
+        showStatusError('Tidak dapat terhubung ke server. Periksa koneksi internet Anda dan coba lagi.');
+      });
+  }
+
+  findBtn.addEventListener('click', findData);
+  emailInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') findData(); });
+
+  saveBtn.addEventListener('click', function(){
+    var nama = document.getElementById('nama').value.trim();
+    var hp = document.getElementById('hp').value.trim();
+    var instansi = document.getElementById('instansi').value.trim();
+    var hpPattern = /^[0-9+ -]{9,15}$/;
+
+    hideStatus();
+
+    if(!nama || !hp || !instansi){
+      showStatusError('Semua kolom wajib diisi.');
+      return;
+    }
+    if(!hpPattern.test(hp)){
+      showStatusError('Masukkan nomor HP yang valid.');
+      return;
+    }
+
+    saveBtn.disabled = true;
+    saveBtn.textContent = 'Menyimpan...';
+
+    fetch(SCRIPT_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({ mode: 'update', email: foundEmail, nama: nama, hp: hp, instansi: instansi })
+    })
+    .then(function(res){ return res.json(); })
+    .then(function(result){
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Simpan Perubahan';
+
+      if(result.status === 'success'){
+        document.getElementById('statusOk').classList.add('show');
+        document.getElementById('statusError').classList.remove('show');
+        return;
+      }
+
+      showStatusError(result.message || 'Gagal menyimpan perubahan. Coba lagi.');
+    })
+    .catch(function(){
+      saveBtn.disabled = false;
+      saveBtn.textContent = 'Simpan Perubahan';
+      showStatusError('Tidak dapat terhubung ke server. Periksa koneksi internet Anda dan coba lagi.');
+    });
+  });
+</script>
+
+</body>
+</html>
