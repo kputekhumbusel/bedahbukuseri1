@@ -1,1 +1,308 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Unduh Sertifikat — KPU Kabupaten Buton Selatan</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --red-600:#d92626;
+    --red-700:#b31e1e;
+    --red-100:#fbe6e2;
+    --amber:#c99a3d;
+    --bg:#f7f4ec;
+    --panel:#ffffff;
+    --ink:#2b241d;
+    --ink-soft:#8a7f6d;
+    --line:#ece4d4;
+    --danger:#c0392b;
+  }
+  [data-theme="dark"]{
+    --bg:#1a1410; --panel:#241c16; --ink:#f2ece1; --ink-soft:#b3a390; --line:#382c22; --red-100:#3a1a14;
+  }
+  @media (prefers-color-scheme: dark){
+    :root:not([data-theme="light"]){
+      --bg:#1a1410; --panel:#241c16; --ink:#f2ece1; --ink-soft:#b3a390; --line:#382c22; --red-100:#3a1a14;
+    }
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background: var(--bg);
+    color: var(--ink);
+    font-family:'Poppins', -apple-system, sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
 
+  header{
+    background: var(--red-600);
+    color:#fff;
+    padding: 20px 28px;
+  }
+  .header-inner{
+    max-width: 640px; margin:0 auto;
+    display:flex; align-items:center; gap:14px;
+  }
+  .mark{
+    width:42px; height:42px; border-radius:12px; flex-shrink:0;
+    background:#fff;
+    display:flex; align-items:center; justify-content:center;
+    padding:6px;
+  }
+  .mark img{ width:100%; height:100%; object-fit:contain; }
+  .header-inner h1{ font-size:17px; font-weight:600; margin:0; color:#fff; }
+  .header-inner .org{ font-size:12px; color:#ffdcdc; margin:2px 0 0; }
+
+  .wrap{ max-width:640px; margin:0 auto; padding: 28px 20px 60px; }
+
+  .panel{
+    background: var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    padding: 26px 24px 28px;
+  }
+  .panel .kicker{
+    display:inline-block;
+    background: var(--red-100); color: var(--red-700);
+    font-size:11.5px; font-weight:600; letter-spacing:.03em;
+    padding: 5px 12px; border-radius: 999px; margin-bottom: 12px;
+  }
+  .panel h2{ font-size:19px; font-weight:600; margin:0 0 6px; }
+  .panel .desc{ font-size:13px; color: var(--ink-soft); margin:0 0 22px; line-height:1.5; }
+
+  label{ display:block; font-size:13px; font-weight:500; margin: 0 0 6px; }
+  .search-row{ display:flex; gap:10px; }
+  input{
+    flex:1;
+    border: 1px solid var(--line);
+    background: var(--bg);
+    color: var(--ink);
+    border-radius: 10px;
+    padding: 11px 13px;
+    font-size: 14px;
+    font-family: inherit;
+    outline:none;
+    transition: border-color .15s ease;
+  }
+  input:focus{ border-color: var(--red-600); }
+  input.invalid{ border-color: var(--danger); }
+  .err{ font-size:12px; color: var(--danger); margin-top:6px; display:none; }
+  .err.show{ display:block; }
+
+  button.find-btn{
+    flex-shrink:0;
+    background: var(--red-600); color:#fff; border:none;
+    border-radius: 10px; padding: 0 20px;
+    font-family: inherit; font-size: 14px; font-weight:600; cursor:pointer;
+    transition: background .15s ease;
+  }
+  button.find-btn:hover{ background: var(--red-700); }
+  button.find-btn:disabled{ opacity:.6; cursor:default; }
+
+  .result{ margin-top: 22px; display:none; }
+  .result.show{ display:block; }
+  .result canvas{
+    width:100%; height:auto; border-radius:10px; border:1px solid var(--line); display:block;
+  }
+  .dl-btn{
+    margin-top: 14px;
+    display:flex; align-items:center; justify-content:center; gap:10px;
+    background: var(--amber); color:#fff; border:none;
+    border-radius: 12px; padding: 14px; width:100%;
+    font-weight:600; font-size:14.5px; font-family:inherit; cursor:pointer;
+  }
+  .dl-btn:hover{ filter:brightness(0.94); }
+
+  .status-msg{
+    margin-top: 18px;
+    display:flex; gap:10px;
+    padding: 13px 14px; border-radius: 12px;
+    font-size: 12.5px; line-height:1.55;
+  }
+  .status-msg.show{ display:flex; }
+  .status-msg{ display:none; }
+  .status-msg.error{ background: var(--red-100); color: var(--red-700); }
+
+  footer{
+    max-width:640px; margin:24px auto 0; padding: 0 20px;
+    font-size:12px; color: var(--ink-soft);
+    text-align:center;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-inner">
+    <div class="mark"><img src="https://www.kpu.go.id/images/1627539868logo-kpu.png" alt="Logo KPU"></div>
+    <div>
+      <h1>Unduh Sertifikat</h1>
+      <p class="org">KPU Kabupaten Buton Selatan</p>
+    </div>
+  </div>
+</header>
+
+<div class="wrap">
+  <div class="panel">
+    <span class="kicker">E-sertifikat</span>
+    <h2>Ambil Sertifikat Kegiatan</h2>
+    <p class="desc">Masukkan email yang sama dengan yang digunakan saat mengisi daftar hadir. Nama Anda akan otomatis muncul pada sertifikat.</p>
+
+    <label for="email">Email</label>
+    <div class="search-row">
+      <input type="email" id="email" placeholder="nama@email.com" autocomplete="email">
+      <button class="find-btn" id="findBtn">Cari Sertifikat</button>
+    </div>
+    <div class="err" id="err-email"></div>
+
+    <div class="status-msg error" id="statusError">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" style="flex-shrink:0"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>
+      <span id="statusErrorText">Email belum tercatat mengisi daftar hadir.</span>
+    </div>
+
+    <div class="result" id="result">
+      <canvas id="certCanvas"></canvas>
+      <button class="dl-btn" id="downloadBtn">
+        <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 3v13M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>
+        Unduh Sertifikat
+      </button>
+    </div>
+  </div>
+
+  <footer>Komisi Pemilihan Umum Kabupaten Buton Selatan</footer>
+</div>
+
+<script>
+  /* ================= KONFIGURASI ================= */
+  // URL Web App Apps Script yang sama seperti absen.html (diakhiri /exec)
+  var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby4Z3O2fObU3PGGKP4oGCcidzFjaq3lOrYDwNTYxhwfxUHOQz0O2jpXPeJ2DMJhNciD/exec';
+
+  // Template sertifikat asli Anda.
+  var TEMPLATE_URL = 'assets/template-sertifikat.jpg';
+
+  // Posisi & gaya teks nama di atas template — sudah dikalibrasi
+  // persis dengan template yang Anda kirim (garis "diberikan kepada").
+  // x, y dalam PIKSEL, dihitung dari ukuran ASLI gambar template (1600x1131).
+  var NAME_STYLE = {
+    x: 800,            // tengah gambar secara horizontal
+    y: 462,            // baseline teks, tepat di atas garis
+    fontSize: 46,
+    fontFamily: "'Poppins', sans-serif",
+    fontStyle: 'italic',
+    fontWeight: '400',
+    color: '#241d16',
+    align: 'center'    // 'center', 'left', atau 'right'
+  };
+  /* ================================================= */
+
+  var emailInput = document.getElementById('email');
+  var findBtn = document.getElementById('findBtn');
+  var resultBox = document.getElementById('result');
+  var canvas = document.getElementById('certCanvas');
+  var ctx = canvas.getContext('2d');
+  var downloadBtn = document.getElementById('downloadBtn');
+  var currentName = '';
+
+  function setError(msg){
+    var input = emailInput;
+    var err = document.getElementById('err-email');
+    if(msg){ input.classList.add('invalid'); err.textContent = msg; err.classList.add('show'); }
+    else{ input.classList.remove('invalid'); err.textContent=''; err.classList.remove('show'); }
+  }
+  function showStatusError(msg){
+    document.getElementById('statusErrorText').textContent = msg;
+    document.getElementById('statusError').classList.add('show');
+  }
+  function hideStatusError(){
+    document.getElementById('statusError').classList.remove('show');
+  }
+
+  emailInput.addEventListener('input', function(){
+    setError('');
+    hideStatusError();
+    resultBox.classList.remove('show');
+  });
+
+  function drawCertificate(nama){
+    var img = new Image();
+    img.crossOrigin = 'anonymous';
+    img.onload = function(){
+      canvas.width = img.naturalWidth;
+      canvas.height = img.naturalHeight;
+      ctx.drawImage(img, 0, 0);
+
+      document.fonts.load(NAME_STYLE.fontStyle + ' ' + NAME_STYLE.fontWeight + ' ' + NAME_STYLE.fontSize + 'px ' + NAME_STYLE.fontFamily).then(function(){
+        ctx.font = NAME_STYLE.fontStyle + ' ' + NAME_STYLE.fontWeight + ' ' + NAME_STYLE.fontSize + 'px ' + NAME_STYLE.fontFamily;
+        ctx.fillStyle = NAME_STYLE.color;
+        ctx.textAlign = NAME_STYLE.align;
+        ctx.textBaseline = 'alphabetic';
+        ctx.fillText(nama, NAME_STYLE.x, NAME_STYLE.y);
+
+        resultBox.classList.add('show');
+      });
+    };
+    img.onerror = function(){
+      showStatusError('Gagal memuat template sertifikat. Periksa TEMPLATE_URL di kode halaman ini.');
+    };
+    img.src = TEMPLATE_URL;
+  }
+
+  function findCertificate(){
+    var email = emailInput.value.trim();
+    var emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+    setError('');
+    hideStatusError();
+    resultBox.classList.remove('show');
+
+    if(!email || !emailPattern.test(email)){
+      setError('Masukkan alamat email yang valid.');
+      return;
+    }
+
+    if(!SCRIPT_URL || SCRIPT_URL.indexOf('script.google.com') === -1){
+      showStatusError('URL backend belum diatur. Tempel URL deployment Apps Script pada variabel SCRIPT_URL di kode halaman ini.');
+      return;
+    }
+
+    findBtn.disabled = true;
+    findBtn.textContent = 'Mencari...';
+
+    fetch(SCRIPT_URL + '?action=getName&email=' + encodeURIComponent(email))
+      .then(function(res){ return res.json(); })
+      .then(function(result){
+        findBtn.disabled = false;
+        findBtn.textContent = 'Cari Sertifikat';
+
+        if(result.status === 'found' && result.nama){
+          currentName = result.nama;
+          drawCertificate(result.nama);
+          return;
+        }
+
+        showStatusError(result.message || 'Email belum tercatat mengisi daftar hadir.');
+      })
+      .catch(function(){
+        findBtn.disabled = false;
+        findBtn.textContent = 'Cari Sertifikat';
+        showStatusError('Tidak dapat terhubung ke server. Periksa koneksi internet Anda dan coba lagi.');
+      });
+  }
+
+  findBtn.addEventListener('click', findCertificate);
+  emailInput.addEventListener('keydown', function(e){ if(e.key === 'Enter') findCertificate(); });
+
+  downloadBtn.addEventListener('click', function(){
+    var link = document.createElement('a');
+    var fileName = 'sertifikat-' + (currentName || 'peserta').toLowerCase().replace(/[^a-z0-9]+/g, '-') + '.png';
+    link.download = fileName;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+  });
+</script>
+
+</body>
+</html>
