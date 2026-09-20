@@ -7,7 +7,7 @@
 <meta name="robots" content="noindex, nofollow">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,540;9..144,620&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,450;0,9..144,540;0,9..144,620;1,9..144,600;1,9..144,700&family=Public+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
   :root{
     --paper:#f4f0ee;
@@ -19,10 +19,11 @@
     --orange:#5b9bf0;
     --orange-deep:#3f85e6;
     --gold:#2fa864;
+    --danger:#ff5b5b;
   }
   [data-theme="dark"]{
     --paper:#141225; --paper-2:#1c1a33; --ink:#eef2fa; --ink-soft:#aab4c8; --line:#2c2a48;
-    --navy:#0e1220; --orange:#5b9bf0; --orange-deep:#3f85e6; --gold:#43c17c;
+    --navy:#0e1220; --orange:#5b9bf0; --orange-deep:#3f85e6; --gold:#43c17c; --danger:#ff6b6b;
   }
   *{box-sizing:border-box;}
   html,body{margin:0;padding:0;}
@@ -117,10 +118,66 @@
   .name-btn svg{ color: var(--orange-deep); flex-shrink:0; }
   .empty-state{ font-size:13px; color: var(--ink-soft); padding: 10px 4px; text-align:center; }
 
+  /* ===== GENERATE FORM (Panitia) ===== */
+  .gen-label{ display:block; font-size:12.5px; font-weight:600; margin: 0 0 8px; color: var(--ink); }
+  .gen-row{ display:flex; gap:10px; align-items:flex-start; }
+  .gen-input-wrap{ flex:1; }
+  .gen-input{
+    width:100%; border: 1.5px solid var(--line); background: var(--paper-2);
+    color: var(--ink); border-radius: 9px; padding: 11px 13px; font-size: 13.5px;
+    font-family: inherit; outline:none; transition: all .2s ease;
+  }
+  .gen-input:focus{ border-color: var(--orange-deep); box-shadow: 0 0 0 3px rgba(74,134,232,0.15); }
+  .gen-input.invalid{ border-color: var(--danger); box-shadow: 0 0 0 3px rgba(255,107,107,0.15); }
+  .gen-err{ font-size:12px; color: var(--danger); margin-top:6px; display:none; font-weight:500; }
+  .gen-err.show{ display:block; }
+
+  .gen-submit-btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:7px;
+    font-family:'Public Sans', sans-serif; font-size:13.5px; font-weight:600;
+    padding: 11px 18px; border-radius: 9px; border:none; cursor:pointer;
+    background: linear-gradient(180deg, rgba(110,165,242,1) 0%, rgba(74,134,232,1) 100%);
+    color:#fff; box-shadow: 0 4px 12px rgba(74,134,232,0.3);
+    transition: all .18s cubic-bezier(0.16,1,0.3,1); white-space:nowrap; flex-shrink:0;
+  }
+  .gen-submit-btn:hover{ transform: translateY(-2px); box-shadow: 0 6px 16px rgba(74,134,232,0.42); }
+  .gen-submit-btn:active{ transform: scale(0.96) !important; }
+  .gen-submit-btn:disabled{ opacity:.65; cursor:default; transform:none !important; box-shadow:none !important; }
+
+  .gen-status-error{
+    margin-top: 12px; display:none; align-items:flex-start; gap:9px;
+    padding: 12px 14px; border-radius: 10px; font-size: 12.5px; line-height:1.5; font-weight:500;
+    background: rgba(255,107,107,0.1); color: var(--danger); border: 1px solid rgba(255,107,107,0.2);
+  }
+  .gen-status-error.show{ display:flex; }
+  .gen-status-error svg{ flex-shrink:0; margin-top:1px; }
+
+  .gen-result{ margin-top: 18px; display:none; padding-top:16px; border-top:1px dashed var(--line); }
+  .gen-result.show{ display:block; animation: fadeDown .3s ease forwards; }
+  .gen-result canvas{
+    width:100%; height:auto; border-radius:10px; border:1px solid var(--line);
+    display:block; box-shadow: 0 10px 20px rgba(0,0,0,0.15);
+  }
+  .gen-download-btn{
+    width:100%; margin-top: 12px;
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    font-family:'Public Sans', sans-serif; font-size:13.5px; font-weight:600;
+    padding: 12px 18px; border-radius: 9px; border:none; cursor:pointer;
+    background: var(--gold); color:#fff; box-shadow: 0 4px 12px rgba(67,193,124,0.25);
+    transition: all .18s cubic-bezier(0.16,1,0.3,1);
+  }
+  .gen-download-btn:hover{ filter:brightness(0.95); transform: translateY(-2px); box-shadow: 0 6px 16px rgba(67,193,124,0.4); }
+  .gen-download-btn:active{ transform: scale(0.96) !important; }
+
   .note{
     margin-top:22px; padding: 13px 16px; border-radius: 12px;
     background: var(--paper); border: 1px solid var(--line);
     font-size:12.5px; color: var(--ink-soft); line-height:1.6;
+  }
+
+  @media (max-width: 480px){
+    .gen-row{ flex-direction:column; align-items:stretch; }
+    .gen-submit-btn{ width:100%; }
   }
 
   footer{
@@ -163,37 +220,51 @@
 
 <script>
   /* =====================================================================
-     DAFTAR SERTIFIKAT
-     Tambah / hapus / ubah nama di sini sesuai kebutuhan.
+     DAFTAR SERTIFIKAT (Narasumber & Panelis — file sudah jadi, tinggal unduh)
      - "nama"  : nama yang ditampilkan di daftar
-     - "file"  : path file PDF milik orang itu di folder assets/sertifikat/
-                 (harus persis sama dengan nama file yang di-upload)
-     Urutan penulisan bebas, tidak perlu urut abjad.
+     - "file"  : path file PDF milik orang itu (harus persis sama dengan
+                 nama file yang di-upload)
      ===================================================================== */
   var DATA = {
     "Narasumber": [
-      { nama: "Dr. Ferry Daud M. Liando, S.IP., M.Si", file: "assets/sertifikat-narasumber.jpg" }
+      { nama: "Dr. Ferry Daud M. Liando, S.IP., M.Si", file: "assets/sertifikat-narasumber.pdf" }
     ],
     "Panelis": [
-      { nama: "Dr. Mahyuddin, S.Sos., M.Si", file: "assets/sertifikat-panelis-1.jpg" },
-      { nama: "L.M. Rauda A.U.M, S.Sos., M.Si", file: "assets/sertifikat-panelis-2.jpg" }
-    ],
-    "Panitia": [
-      { nama: "Nama Panitia 1", file: "assets/sertifikat/panitia-nama-panitia-1.pdf" },
-      { nama: "Nama Panitia 2", file: "assets/sertifikat/panitia-nama-panitia-2.pdf" }
+      { nama: "Dr. Mahyuddin, S.Sos., M.Si", file: "assets/sertifikat-panelis-1.pdf" },
+      { nama: "L.M. Rauda A.U.M, S.Sos., M.Si", file: "assets/sertifikat-panelis-2.pdf" }
     ]
+  };
+
+  /* =====================================================================
+     KONFIGURASI GENERATE SERTIFIKAT PANITIA (otomatis dari nama yang diketik)
+     ===================================================================== */
+  var PANITIA_TEMPLATE_URL = 'assets/template-sertifikat-panitia.jpg';
+  var PANITIA_NAME_STYLE = {
+    centerX: 800,
+    lineY: 488,
+    gapAboveLine: 14,
+    maxTextWidth: 500,
+    maxFontSize: 52,
+    minFontSize: 24,
+    fontFamily: "'Fraunces', serif",
+    fontWeight: '700',
+    fontStyleItalic: true,
+    color: '#1e190f'
   };
   /* ===================================================================== */
 
   var roleIcon = '<svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="#3f85e6" stroke-width="1.9"><circle cx="12" cy="9" r="6"/><path d="M8.5 14.2L7 21l5-2.5 5 2.5-1.5-6.8"/></svg>';
   var chevSvg = '<svg class="chev" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M6 9l6 6 6-6"/></svg>';
   var downloadSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><path d="M12 3v13M7 11l5 5 5-5"/><path d="M5 21h14"/></svg>';
+  var alertSvg = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v5M12 16h.01"/></svg>';
 
   var container = document.getElementById('roleContainer');
-  var roleKeys = Object.keys(DATA);
+  var listDivRefs = {};
 
-  // Role yang menampilkan kolom pencarian nama (biasanya yang jumlah orangnya banyak)
-  var SEARCHABLE_ROLES = ['Panitia'];
+  // Role yang menampilkan kolom pencarian nama (untuk daftar statis)
+  var SEARCHABLE_ROLES = [];
+
+  var roleKeys = Object.keys(DATA).concat(['Panitia']);
 
   roleKeys.forEach(function(role, idx){
     var group = document.createElement('div');
@@ -212,27 +283,31 @@
     var panelDiv = document.createElement('div');
     panelDiv.className = 'role-panel';
 
-    var showSearch = SEARCHABLE_ROLES.indexOf(role) !== -1;
-    if(showSearch){
-      var searchInput = document.createElement('input');
-      searchInput.type = 'text';
-      searchInput.className = 'name-search';
-      searchInput.placeholder = 'Cari nama ' + role + '...';
-      searchInput.addEventListener('input', function(e){ renderNames(idx, role, e.target.value); });
-      panelDiv.appendChild(searchInput);
+    if(role === 'Panitia'){
+      buildPanitiaForm(panelDiv, idx);
+    } else {
+      var showSearch = SEARCHABLE_ROLES.indexOf(role) !== -1;
+      if(showSearch){
+        var searchInput = document.createElement('input');
+        searchInput.type = 'text';
+        searchInput.className = 'name-search';
+        searchInput.placeholder = 'Cari nama ' + role + '...';
+        searchInput.addEventListener('input', function(e){ renderNames(idx, role, e.target.value); });
+        panelDiv.appendChild(searchInput);
+      }
+
+      var listDiv = document.createElement('div');
+      listDiv.className = 'name-list';
+      listDiv.id = 'names-' + idx;
+      panelDiv.appendChild(listDiv);
+      listDivRefs[idx] = listDiv;
+
+      renderNames(idx, role, '');
     }
-
-    var listDiv = document.createElement('div');
-    listDiv.className = 'name-list';
-    listDiv.id = 'names-' + idx;
-
-    panelDiv.appendChild(listDiv);
 
     group.appendChild(btn);
     group.appendChild(panelDiv);
     container.appendChild(group);
-
-    renderNames(idx, role, '');
   });
 
   function toggleGroup(idx){
@@ -241,7 +316,7 @@
   }
 
   function renderNames(idx, role, filterText){
-    var listDiv = document.getElementById('names-' + idx);
+    var listDiv = listDivRefs[idx];
     var q = (filterText || '').trim().toLowerCase();
     var people = DATA[role].filter(function(p){
       return !q || p.nama.toLowerCase().indexOf(q) !== -1;
@@ -260,6 +335,161 @@
       a.setAttribute('download', '');
       a.innerHTML = '<span class="nm">' + p.nama + '</span>' + downloadSvg;
       listDiv.appendChild(a);
+    });
+  }
+
+  /* ===== Form generate untuk Panitia ===== */
+  function buildPanitiaForm(panelDiv, idx){
+    var label = document.createElement('label');
+    label.className = 'gen-label';
+    label.textContent = 'Nama Lengkap';
+
+    var row = document.createElement('div');
+    row.className = 'gen-row';
+
+    var inputWrap = document.createElement('div');
+    inputWrap.className = 'gen-input-wrap';
+
+    var input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'gen-input';
+    input.placeholder = 'Nama sesuai identitas';
+    input.id = 'panitia-nama-' + idx;
+
+    var errDiv = document.createElement('div');
+    errDiv.className = 'gen-err';
+    errDiv.id = 'panitia-err-' + idx;
+
+    inputWrap.appendChild(input);
+    inputWrap.appendChild(errDiv);
+
+    var submitBtn = document.createElement('button');
+    submitBtn.type = 'button';
+    submitBtn.className = 'gen-submit-btn';
+    submitBtn.id = 'panitia-submit-' + idx;
+    submitBtn.textContent = 'Submit';
+
+    row.appendChild(inputWrap);
+    row.appendChild(submitBtn);
+
+    var statusError = document.createElement('div');
+    statusError.className = 'gen-status-error';
+    statusError.id = 'panitia-status-' + idx;
+    statusError.innerHTML = alertSvg + '<span id="panitia-status-text-' + idx + '"></span>';
+
+    var resultDiv = document.createElement('div');
+    resultDiv.className = 'gen-result';
+    resultDiv.id = 'panitia-result-' + idx;
+
+    var canvas = document.createElement('canvas');
+    canvas.id = 'panitia-canvas-' + idx;
+
+    var downloadBtn = document.createElement('button');
+    downloadBtn.type = 'button';
+    downloadBtn.className = 'gen-download-btn';
+    downloadBtn.innerHTML = downloadSvg + ' Unduh Sertifikat';
+
+    resultDiv.appendChild(canvas);
+    resultDiv.appendChild(downloadBtn);
+
+    panelDiv.appendChild(label);
+    panelDiv.appendChild(row);
+    panelDiv.appendChild(statusError);
+    panelDiv.appendChild(resultDiv);
+
+    var currentName = '';
+
+    function setInputError(msg){
+      if(msg){
+        input.classList.add('invalid');
+        errDiv.textContent = msg;
+        errDiv.classList.add('show');
+      } else {
+        input.classList.remove('invalid');
+        errDiv.textContent = '';
+        errDiv.classList.remove('show');
+      }
+    }
+    function showStatusError(msg){
+      document.getElementById('panitia-status-text-' + idx).textContent = msg;
+      statusError.classList.add('show');
+    }
+    function hideStatusError(){
+      statusError.classList.remove('show');
+    }
+
+    input.addEventListener('input', function(){
+      setInputError('');
+      hideStatusError();
+      resultDiv.classList.remove('show');
+    });
+    input.addEventListener('keydown', function(e){ if(e.key === 'Enter') submit(); });
+
+    function fitFontSize(ctx, text, maxWidth, maxSize, minSize, weight, italic, family){
+      var size = maxSize;
+      while(size >= minSize){
+        ctx.font = (italic ? 'italic ' : '') + weight + ' ' + size + 'px ' + family;
+        if(ctx.measureText(text).width <= maxWidth) return size;
+        size -= 1;
+      }
+      return minSize;
+    }
+
+    function drawCertificate(nama){
+      var ctx = canvas.getContext('2d');
+      var img = new Image();
+      img.crossOrigin = 'anonymous';
+      img.onload = function(){
+        canvas.width = img.naturalWidth;
+        canvas.height = img.naturalHeight;
+        ctx.drawImage(img, 0, 0);
+
+        var s = PANITIA_NAME_STYLE;
+        var weightLabel = s.fontWeight + ' ' + s.maxFontSize + 'px ' + s.fontFamily;
+        document.fonts.load((s.fontStyleItalic ? 'italic ' : '') + weightLabel).then(function(){
+          var size = fitFontSize(ctx, nama, s.maxTextWidth, s.maxFontSize, s.minFontSize, s.fontWeight, s.fontStyleItalic, s.fontFamily);
+          ctx.font = (s.fontStyleItalic ? 'italic ' : '') + s.fontWeight + ' ' + size + 'px ' + s.fontFamily;
+          ctx.fillStyle = s.color;
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'alphabetic';
+          var baselineY = s.lineY - s.gapAboveLine;
+          ctx.fillText(nama, s.centerX, baselineY);
+
+          resultDiv.classList.add('show');
+        });
+      };
+      img.onerror = function(){
+        showStatusError('Gagal memuat template sertifikat. Pastikan file ' + PANITIA_TEMPLATE_URL + ' tersedia di server.');
+      };
+      img.src = PANITIA_TEMPLATE_URL;
+    }
+
+    function submit(){
+      var nama = input.value.trim();
+      setInputError('');
+      hideStatusError();
+      resultDiv.classList.remove('show');
+
+      if(!nama){
+        setInputError('Nama tidak boleh kosong.');
+        return;
+      }
+      if(nama.length < 3){
+        setInputError('Nama terlalu pendek.');
+        return;
+      }
+
+      currentName = nama;
+      drawCertificate(nama);
+    }
+
+    submitBtn.addEventListener('click', submit);
+
+    downloadBtn.addEventListener('click', function(){
+      var link = document.createElement('a');
+      link.download = 'Sertifikat Panitia - ' + (currentName || 'Panitia') + '.png';
+      link.href = canvas.toDataURL('image/png');
+      link.click();
     });
   }
 </script>
