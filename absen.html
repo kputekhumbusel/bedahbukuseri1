@@ -350,6 +350,12 @@
         document.getElementById('rejectText').textContent = result.message || ('Email "' + email + '" sudah pernah mengisi daftar hadir.');
         openOverlay('overlayReject'); return;
       }
+      if(result.status === 'locked'){
+        document.getElementById('errorText').textContent = result.message || 'Presensi belum dibuka. Silakan coba lagi setelah kegiatan dimulai.';
+        openOverlay('overlayError');
+        checkTimeLock();
+        return;
+      }
       if(result.status === 'success'){ document.getElementById('absenForm').reset(); openOverlay('overlaySuccess'); return; }
       document.getElementById('errorText').textContent = result.message || 'Terjadi kendala saat menyimpan data. Silakan coba lagi.';
       openOverlay('overlayError');
