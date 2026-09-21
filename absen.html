@@ -192,7 +192,7 @@
     <!-- Alert Form Terkunci -->
     <div class="alert warning anim-item anim-1" id="lockAlert">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
-      <span>Formulir masih terkunci dan akan terbuka otomatis pada saat kegiatan dimulai.</span>
+      <span>Formulir absensi masih dikunci.</span>
     </div>
 
     <form id="absenForm" novalidate>
@@ -264,11 +264,7 @@
 
 <script>
   var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbwBxuPU2o6QS8LBd-yomBNE4dWYAEG2PB0qnawCHte7YNVH2dVwM8fDQ55jQGhBlxo/exec';
-
-  /* ================= PENGATURAN KUNCI WAKTU ================= */
-  // Waktu pembukaan: 21 September 2026, pukul 13:00 WITA.
-  // Format ISO dengan +08:00 (Zona Waktu WITA / UTC+8).
-  var openTime = new Date('2026-09-21T13:30:00+08:00').getTime();
+  var openTime = new Date('2026-09-21T14:30:00+08:00').getTime();
   var lockInterval;
 
   function checkTimeLock() {
